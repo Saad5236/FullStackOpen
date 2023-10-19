@@ -1,0 +1,10 @@
+JAVASCRIPT MATERIALS
+____________________
+
+https://developer.mozilla.org/en-US/docs/Web/JavaScript
+https://developer.mozilla.org/en-US/docs/Web/JavaScript/Language_Overview
+https://github.com/getify/You-Dont-Know-JS
+https://javascript.info/
+https://eloquentjavascript.net/
+https://www.youtube.com/playlist?list=PLlasXeu85E9cQ32gLCvAvr9vNaUccPVNP
+https://egghead.io/

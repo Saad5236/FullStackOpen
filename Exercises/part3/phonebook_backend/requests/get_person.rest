@@ -1,0 +1,7 @@
+GET https://localhost:3001/api/notes
+###
+GET https://localhost:3001/api/notes/2
+###
+GET https://fso-phonebook-exercise.fly.dev/api/persons/2
+###
+GET https://fso-phonebook-exercise.fly.dev/api/persons

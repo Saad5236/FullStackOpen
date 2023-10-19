@@ -1,0 +1,16 @@
+POST http://localhost:3001/api/persons
+Content-type: application/json
+
+{
+    "name": "Bruhda12",
+    "number": "12312323123"
+}
+
+###
+POST http://fso-phonebook-exercise.fly.dev/api/persons
+Content-type: application/json
+
+{
+    "name": "Bruhd",
+    "number": "1231232"
+}

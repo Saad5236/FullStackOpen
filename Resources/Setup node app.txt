@@ -1,0 +1,33 @@
+- Download and install latest recommended node version
+- run: npm init
+- In new package.json file, inside scripts object, add a new property: "start": "node index.js"
+- make new index.js file
+- run: npm install express
+- run: npm install --save-dev nodemon
+- in package.json, remove: "devDependencies": {"nodemon": "^2.0.20"}
+- in package.json, inside scripts object, add new property: "dev": "nodemon index.js" 
+- now we can run our app server using command: npm run dev
+- install mongoose to use mongodb: npm install mongoose
+- install dotenv package, to store environment variable: npm install dotenv. After that create .env named file in root dir. And create env variables in it which can be used in process.env.
+- install and setup cors, to receive responses from same source in backend, follow following steps:
+npm install cors (to install cors pkg)
+NOW ADD FOLLOWING CODE IN YOUR index.js IN BACKEND REPO:
+const cors = require('cors')
+app.use(cors())
+- To install and setup eslint in your backend project:
+npm install eslint --save-dev
+npx eslint --init
+
+To validate a file if it follows eslint rules: npx eslint index.js
+To auto-fix errors in files: npx eslint --fix index.js
+
+- To setup jest to test node applications:
+run: npm install --save-dev jest
+add key-value pair in backend repo's package.json's scripts: "test": "jest --verbose"
+add new thing in package.json of backend proj: "jest": { "testEnvironment": "node" }
+add following key-value pair in "env" of package.json: 'jest': true
+Now you can make a new file in utils directory in which you can write your test functions.
+To run tests create a new directory of "tests" and create a new file (like: testcases.test.js) in which you can run test cases.
+now to run tests you've created in tests directory's files, then you can use following two commands to run test cases:
+npm test (to run all test cases you've created)
+npm test -- -t 'write here the description of test cases you've written' (here in string you may pass test description of the test case you wanna run)

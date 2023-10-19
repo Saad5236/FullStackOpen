@@ -1,0 +1,91 @@
+____________________________________________________________________________________________________________________________________
+- Create account and enable its services by adding our card details.
+- fly auth login (verify your account)
+- fly launch (initializing files of fly to deploy on internet): To set name for app (or let fly make it), Set a region, and don't deploy immediately (select no).
+set app name and region (randomly)
+- in newly create fly.toml, add following code: Make sure in env PORT and http_service internal port should be same as you've set in your backend project's port#, where your server is listening to requests
+_____________________________________________________________
+[build]
+
+[env]
+  PORT = "3001" # add this
+
+[http_service]
+  internal_port = 3001 # ensure that this is same as PORT
+  force_https = true
+  auto_stop_machines = true
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ["app"]
+_____________________________________________________________
+
+- Now to deploy backend only: fly deploy
+- Now to run the backend app: fly open (or follow given url that's provided after you deployed it using fly deploy)
+
+
+____________________________________________________________________________________________________________________________________
+AFTER DOING SOME CHANGES IN FRONT OR BACKEND YOU MAY FOLLOW FOLLOWING STEPS: 
+____________________________________________________________________________________________________________________________________
+- since we're running our frontend and backend both on same serveraddress i.e. on localhost and on same port then we should change our baseUrl in our front code where we're fetching data from backend to a certain frontend url:
+So, change following:
+const baseUrl = "http://localhost:3001/api/notes";
+To following code:
+const baseUrl = "/api/notes";
+ 
+- CREATING BUILD APP OF OUR FRONTEND:
+npm run build
+To copy newly created build folder (created in frontend directory) to our backend directory using following command:
+copy -r build ../backend
+OR
+you can simply copy paste it inside backend app
+
+- now add following middleware line in backend repo's index.js:
+app.use(express.static("build"));
+
+- Now to deploy app on internet use following command: fly deploy
+- Now run app in browser using: fly open
+
+___________________________________________________________________________________________________________________________________
+
+IMP: After you've made some changes after deploying backend app. i.e. you've copy pasted new frontend build folder inside backend app, then after such change or any other type of editing of any kind in any file or add/remove new file inside backend directory, then we''ve to redeploy it, using again same command as we did before. Moreover, if we've made some changes to frontend repo after we've created build, then we've to re create new build using npm run build and copy paste that build in backend repo again and have to redeploy backend again on fly: 
+fly deploy -a app-name (wrong) 
+fly deploy (correct)
+
+- now run app in browser using: 
+fly open -a app-name (wrong)
+fly open (correct)
+OR
+simply copy paste url in browser as provided by fly in terminal after you ran fly deploy command
+
+____________________________________________________________________________________________________________________________________
+
+Add following scripts inside scripts object in package.json of backend repository, to speed up our process of deploying on internet:
+"scripts":{
+...
+"build:ui":  "@powershell Remove-Item -Recurse -Force build && cd ../frontend && npm run build && @powershell Copy-Item build -Recurse ../backend",
+"deploy": "fly deploy",
+"deploy:full": "npm run build:ui && npm run deploy",    
+"logs:prod": "fly logs"
+}
+
+HERE:
+1- npm run build:ui (creates new build folder of our frontend app, then copy pastes that in our backend repo and in case you already had previously created build in backend repo then it overwrites that build with new one)
+2- npm run deploy (deploys on internet just like we do fly deploy)
+3- npm run deploy:full (does work of both above two commands i.e. 1 and 2)
+4- npm run logs:prod (to checks logs) 
+
+
+____________________________________________________________________________________________________________________________________
+
+Now you probably will use some environment variable that will be stored inside your .env file, now in dockerignore, we'll normall add .env in order to not upload our secrets i.e. content included in .env (e.g. personal mongodb uri), so if we ignore it and then deploy our app then fly.io have no way to fetch those environment variables present in .env so then we will deploy those env variables as secrets on fly.io which will not be then shown to public. To do that follow following steps to add as many environment variables on your deployed application as secrets:
+
+1 - run commands like "fly secrets setup ENV_VARIABLE='VALUE'":
+e.g.
+fly secrets setup MONGODB_URI='mongodb+srv://Saad_Atif:huaweihonor5c@cluster0.r9vid7i.mongodb.net/noteAppretryWrites=true&w=majority'
+OR
+fly secrets set MONGODB_URI='mongodb+srv://Saad_Atif:huaweihonor5c@cluster0.r9vid7i.mongodb.net/noteAppretryWrites=true&w=majority'
+
+(add all your secrete environment variables like that except your PORT# on which you're running backend app which will be present in your .env but dont add that as secrete)
+
+2 - Run following command to import all the secrete variables into your deployed app that you've added in previous step 
+"cat .env | fly secrets import"

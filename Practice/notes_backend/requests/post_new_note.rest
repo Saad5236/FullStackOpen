@@ -1,0 +1,17 @@
+POST http://localhost:3001/api/notes
+Content-type: application/json
+
+{
+    "content": "CSS is good",
+    "important": true
+}
+
+###
+POST http://misty-grass-1402.fly.dev/api/notes
+Content-type: application/json
+
+{
+    "content": "bruh",
+    "important": false
+}
+

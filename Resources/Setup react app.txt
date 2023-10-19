@@ -1,0 +1,20 @@
+To setup a react application:
+- Create and setup react app, using following commands:
+(New method: Vite)
+	npm create vite@latest app -- --template react
+	npm install
+	cd app (to go into your newly created application's dir)
+	npm run dev (to run application on (by default) port#5173)
+
+(Old method: create-react-app)
+	npx create-react-app app
+	cd app
+	npm start (to run application on (by default) port#3000)
+
+- npm install axios
+- Make db.json file in root directory and store initial data (which act as a portable backend database)
+- npm install -g json-server (does the global installation, if not installed previously, then install it)
+- npm install json-server --save-dev (not sure what this is)
+- now run server, by using powershell and change current dir to your react app
+- write: npx json-server --port 3001 --watch /db.json
+- open browser and open link: http://localhost:3001/dataObj (dataObj is the name of collection used to store data objects in db.json)
