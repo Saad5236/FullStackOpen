@@ -3,10 +3,13 @@
 const notesRouter = require("express").Router()
 const Note = require("../models/note") // MONGODB Model: Note (from modules folder, notes.js file)
 
-notesRouter.get("/", (request, response) => {
-  Note.find({}).then((notes) => {
-    response.json(notes)
-  })
+notesRouter.get("/", async (request, response) => {
+  // Note.find({}).then((notes) => {
+  //   response.json(notes)
+  // })
+
+  const notes = await Note.find({})
+  response.json(notes)
 })
 
 notesRouter.get("/:id", (request, response, next) => {
@@ -21,7 +24,9 @@ notesRouter.get("/:id", (request, response, next) => {
     .catch((error) => next(error))
 })
 
-notesRouter.post("/", (request, response, next) => {
+// ese he comment kia kyu k next function unused ha to eslint error produce ker ra
+// notesRouter.post("/", async (request, response, next) => {
+notesRouter.post("/", async (request, response) => {
   const body = request.body
 
   const note = new Note({
@@ -29,14 +34,16 @@ notesRouter.post("/", (request, response, next) => {
     important: body.important || false,
   })
 
-  console.log("!))))", note)
+  const savedNote = await note.save()
+  response.status(201).json(savedNote)
 
-  note
-    .save()
-    .then((savedNote) => {
-      response.json(savedNote)
-    })
-    .catch((error) => next(error))
+  // note
+  //   .save()
+  //   .then((savedNote) => {
+  //     // response.json(savedNote)
+  //     response.status(201).json(savedNote)
+  //   })
+  //   .catch((error) => next(error))
 })
 
 notesRouter.delete("/:id", (request, response, next) => {

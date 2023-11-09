@@ -31,3 +31,5 @@ To run tests create a new directory of "tests" and create a new file (like: test
 now to run tests you've created in tests directory's files, then you can use following two commands to run test cases:
 npm test (to run all test cases you've created)
 npm test -- -t 'write here the description of test cases you've written' (here in string you may pass test description of the test case you wanna run)
+npm test -- -t 'notes' (It will run all of the tests that contain notes in their test's string name)
+npm test -- filetorun.test.js (to run tests present in a certain test file, normally all test files are present in tests directory)

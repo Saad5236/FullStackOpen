@@ -1,0 +1,5 @@
+part4 -> section b (testing the backend) -> initializing the database before tests
+part4 -> section b -> Error handling and async/await
+things to remember:
+pushed code to github
+post route of notes first line is commented because next param is not being used in controller so eslint was producing error that's why
