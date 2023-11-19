@@ -7,6 +7,7 @@ const notesRouter = require("./controllers/notes") // importing all notes' relat
 const middleware = require("./utils/middleware")
 const logger = require("./utils/logger")
 const mongoose = require("mongoose")
+require("express-async-errors") // * since we have to use try catch block alongwith use of async/await functionality, so this package helps us to remove all the try-catch blocks and still all error would be handled
 
 // Mongoose way of connecting to mongodb:
 

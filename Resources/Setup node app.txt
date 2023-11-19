@@ -17,6 +17,21 @@ app.use(cors())
 - To install and setup eslint in your backend project:
 npm install eslint --save-dev
 npx eslint --init
+- To run tests on your backend application, use supertest:
+npm install --save-dev supertest
+
+You may encounter some kind of weird warning while running test then follow following steps for it:
+create a file name teardown.js in your tests dir and write following in it: 
+module.exports = () => {
+  process.exit(0)
+}
+And in your backend (node app) project's package.json's jest object, add following: 
+"globalTeardown": "./tests/teardown.js"
+- To remove all try-catch blocks while error handling still being performed in async/await functionalities, install following package:
+npm install express-async-errors
+copy paste following app.js of our node app.
+require("express-async-errors") 
+
 
 To validate a file if it follows eslint rules: npx eslint index.js
 To auto-fix errors in files: npx eslint --fix index.js
