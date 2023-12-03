@@ -1,3 +1,6 @@
 - Deploy on internet using fly.io
 - upload project on github
 - Part 3's section b's exercise (deploy app to internet section is yet to be covered)
+
+
+- optional exercises 4.11 and 4.12

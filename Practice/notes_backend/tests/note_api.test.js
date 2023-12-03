@@ -53,117 +53,132 @@ beforeEach(async () => {
   await Promise.all(promiseArray)
 })
 
-// * test makes an HTTP GET request to the /api/notes url and verifies that the request is responded to with the status code 200.
-// * The test also verifies that the Content-Type header is set to application/json, indicating that the data is in the desired format.
-// * (In content-type's value) The regex starts and ends with a slash /, because the desired string application/json also contains the same slash, it is preceded by a \ so that it is not interpreted as a regex termination character.
+describe("when there is initially some notes saved", () => {
+  // * test makes an HTTP GET request to the /api/notes url and verifies that the request is responded to with the status code 200.
+  // * The test also verifies that the Content-Type header is set to application/json, indicating that the data is in the desired format.
+  // * (In content-type's value) The regex starts and ends with a slash /, because the desired string application/json also contains the same slash, it is preceded by a \ so that it is not interpreted as a regex termination character.
 
-test("notes are returned as json", async () => {
-  await api
-    .get("/api/notes")
-    .expect(200)
-    .expect("Content-Type", /application\/json/)
-}, 100000) // This third parameter sets the timeout to 100000 ms. A long timeout ensures that our test won't fail due to the time it takes to run.
+  test("notes are returned as json", async () => {
+    await api
+      .get("/api/notes")
+      .expect(200)
+      .expect("Content-Type", /application\/json/)
+  }, 100000) // This third parameter sets the timeout to 100000 ms. A long timeout ensures that our test won't fail due to the time it takes to run.
 
-// * We're testing our backend app by posting a data object (note) into database to check if post route is working properly
+  test("all notes are returned", async () => {
+    const response = await api.get("/api/notes")
 
-test("a valid note can be added", async () => {
-  const newNote = {
-    content: "async/await simplifies making async calls",
-    important: true,
-  }
+    // expect(response.body).toHaveLength(initialNotes.length)
+    expect(response.body).toHaveLength(helper.initialNotes.length)
+  }, 100000)
 
-  await api
-    .post("/api/notes")
-    .send(newNote)
-    .expect(201)
-    .expect("Content-Type", /application\/json/)
+  test("a specific note is within the returned notes", async () => {
+    const response = await api.get("/api/notes")
 
-  // const response = await api.get("/api/notes")
+    const contents = response.body.map((r) => r.content)
+    expect(contents).toContain("Browser can execute only JavaScript")
+  })
+})
 
-  // const contents = response.body.map(r => r.content)
+describe("viewing a specific note", () => {
+  // * test to fetch a certain note using get http method
 
-  // expect(response.body).toHaveLength(initialNotes.length + 1)
+  test("succeeds with a valid id", async () => {
+    const notesAtStart = await helper.notesInDb()
 
-  const notesAtEnd = await helper.notesInDb()
-  expect(notesAtEnd).toHaveLength(helper.initialNotes.length + 1)
+    const noteToView = notesAtStart[0]
 
-  const contents = notesAtEnd.map((n) => n.content)
+    const resultNote = await api
+      .get(`/api/notes/${noteToView.id}`)
+      .expect(200)
+      .expect("Content-Type", /application\/json/)
 
-  expect(contents).toContain("async/await simplifies making async calls")
+    expect(resultNote.body).toEqual(noteToView)
+  })
+
+  test("fails with statuscode 404 if note does not exist", async () => {
+    const validNonexistingId = await helper.nonExistingId()
+
+    await api.get(`/api/notes/${validNonexistingId}`).expect(404)
+  })
+
+  test("fails with statuscode 400 if id is invalid", async () => {
+    const invalidId = "5a3d5da59070081a82a3445"
+
+    await api.get(`/api/notes/${invalidId}`).expect(400)
+  })
+})
+
+describe("addition of a new note", () => {
+  // * We're testing our backend app by posting a data object (note) into database to check if post route is working properly
+
+  test("succeeds with valid data", async () => {
+    const newNote = {
+      content: "async/await simplifies making async calls",
+      important: true,
+    }
+
+    await api
+      .post("/api/notes")
+      .send(newNote)
+      .expect(201)
+      .expect("Content-Type", /application\/json/)
+
+    // const response = await api.get("/api/notes")
+
+    // const contents = response.body.map(r => r.content)
+
+    // expect(response.body).toHaveLength(initialNotes.length + 1)
+
+    const notesAtEnd = await helper.notesInDb()
+    expect(notesAtEnd).toHaveLength(helper.initialNotes.length + 1)
+
+    const contents = notesAtEnd.map((n) => n.content)
+
+    expect(contents).toContain("async/await simplifies making async calls")
+  })
+
+  // * test to intentionally fail to add data in datbase since we've not add content property in our data object so it should failwith error code 404
+
+  test("fails with status code 400 if data invalid", async () => {
+    const newNote = {
+      important: true,
+    }
+
+    await api.post("/api/notes").send(newNote).expect(400)
+
+    // const response = await api.get("/api/notes")
+    const notesAtEnd = await helper.notesInDb()
+
+    // expect(response.body).toHaveLength(initialNotes.length)
+    expect(notesAtEnd).toHaveLength(helper.initialNotes.length)
+  })
+})
+
+describe("deletion of a note", () => {
+  // * test to delete a certain note using delete http method
+
+  test("succeeds with status code 204 if id is valid", async () => {
+    const notesAtStart = await helper.notesInDb()
+    const noteToDelete = notesAtStart[0]
+
+    await api.delete(`/api/notes/${noteToDelete.id}`).expect(204)
+
+    const notesAtEnd = await helper.notesInDb()
+
+    expect(notesAtEnd).toHaveLength(helper.initialNotes.length - 1)
+
+    const contents = notesAtEnd.map((r) => r.content)
+
+    expect(contents).not.toContain(noteToDelete.content)
+  })
 })
 
 // beforeEach ki purani jaga
 
-// test("there are two notes", async () => {
-//   const response = await api.get("/api/notes")
-//   expect(response.body).toHaveLength(2)
-// })
-
-test("all notes are returned", async () => {
-  const response = await api.get("/api/notes")
-
-  // expect(response.body).toHaveLength(initialNotes.length)
-  expect(response.body).toHaveLength(helper.initialNotes.length)
-}, 100000)
-
 test("the first note is about HTTP methods", async () => {
   const response = await api.get("/api/notes")
   expect(response.body[0].content).toBe("HTML is easy")
-})
-
-test("a specific note is within the returned notes", async () => {
-  const response = await api.get("/api/notes")
-
-  const contents = response.body.map((r) => r.content)
-  expect(contents).toContain("Browser can execute only JavaScript")
-})
-
-// * test to intentionally fail to add data in datbase since we've not add content property in our data object so it should failwith error code 404
-
-test("note without content is not added", async () => {
-  const newNote = {
-    important: true,
-  }
-
-  await api.post("/api/notes").send(newNote).expect(400)
-
-  // const response = await api.get("/api/notes")
-  const notesAtEnd = await helper.notesInDb()
-
-  // expect(response.body).toHaveLength(initialNotes.length)
-  expect(notesAtEnd).toHaveLength(helper.initialNotes.length)
-})
-
-// * test to fetch a certain note using get http method
-
-test("a specific note can be viewed", async () => {
-  const notesAtStart = await helper.notesInDb()
-
-  const noteToView = notesAtStart[0]
-
-  const resultNote = await api
-    .get(`/api/notes/${noteToView.id}`)
-    .expect(200)
-    .expect("Content-Type", /application\/json/)
-
-  expect(resultNote.body).toEqual(noteToView)
-})
-
-// * test to delete a certain note using delete http method
-
-test("a note can be deleted", async () => {
-  const notesAtStart = await helper.notesInDb()
-  const noteToDelete = notesAtStart[0]
-
-  await api.delete(`/api/notes/${noteToDelete.id}`).expect(204)
-
-  const notesAtEnd = await helper.notesInDb()
-
-  expect(notesAtEnd).toHaveLength(helper.initialNotes.length - 1)
-
-  const contents = notesAtEnd.map((r) => r.content)
-
-  expect(contents).not.toContain(noteToDelete.content)
 })
 
 afterAll(async () => {

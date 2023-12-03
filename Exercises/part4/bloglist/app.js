@@ -8,6 +8,7 @@ const mongoose = require("mongoose")
 const logger = require("./utils/logger")
 const blogsRouter = require("./controllers/blogs")
 const middleware = require("./utils/middleware")
+require("express-async-errors")
 
 // Mongoose db setup
 
