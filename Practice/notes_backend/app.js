@@ -4,6 +4,8 @@ const cors = require("cors")
 const config = require("./utils/config")
 // const Note = require("./models/note") // MONGODB Model: Note (from modules folder, notes.js file)
 const notesRouter = require("./controllers/notes") // importing all notes' related paths exported from notes.js file is now to be used as middleware and will be called as app.use. So, no need to include all routes in app.js (i.e. express app).
+const usersRouter = require("./controllers/users")
+const loginRouter = require("./controllers/login")
 const middleware = require("./utils/middleware")
 const logger = require("./utils/logger")
 const mongoose = require("mongoose")
@@ -65,6 +67,9 @@ app.use(cors()) // Now by using cors middleware, we can access requests from url
 app.use(middleware.requestLogger) // Personal first middleware made into use (which is declare above)
 app.use(express.static("build")) // to fetch all static assets (which include frontend's build folder created), to run with backend app
 app.use("/api/notes", notesRouter) // all notes routes are handled in notesRouter obj which is a middleware
+app.use("/api/users", usersRouter)
+app.use("/api/login", loginRouter)
+
 // // _____ROUTES______
 
 // // Route for home page of app

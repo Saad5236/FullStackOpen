@@ -27,6 +27,8 @@ const errorHandler = (error, request, response, next) => {
   } // since we've added custom mongoose validators in our model, so in else if, we're handling validation errors too if a user posts a data into db which has invalid data format
   else if (error.name === "ValidationError") {
     return response.status(400).json({ error: error.message })
+  } else if (error.name === "JsonWebTokenError") {
+    return response.status(401).json({ error: error.message })
   }
 
   next(error)

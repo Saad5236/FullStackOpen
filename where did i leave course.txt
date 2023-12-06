@@ -1,6 +1,7 @@
 part4 -> section b (testing the backend) -> initializing the database before tests
 part4 -> section b -> Error handling and async/await
 part4 -> section b -> refactoring tests
+part4 -> section d -> Problems of Token-based authentication
 
 things to remember:
 pushed code to github

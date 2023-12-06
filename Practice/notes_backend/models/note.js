@@ -28,6 +28,10 @@ const noteSchema = new mongoose.Schema({
     required: true,
   },
   important: Boolean,
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User"
+  }
 })
 
 // By default, mongodb returned data objects contains __v and _id properties. So, following line of code removes __v property (which is of no use for me) and modifies _id property to id.
