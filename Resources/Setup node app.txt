@@ -4,11 +4,11 @@
 - make new index.js file
 - run: npm install express
 - run: npm install --save-dev nodemon
-- in package.json, remove: "devDependencies": {"nodemon": "^2.0.20"}
+- (not necessary) in package.json, remove: "devDependencies": {"nodemon": "^2.0.20"}
 - in package.json, inside scripts object, add new property: "dev": "nodemon index.js" 
 - now we can run our app server using command: npm run dev
 - install mongoose to use mongodb: npm install mongoose
-- install dotenv package, to store environment variable: npm install dotenv. After that create .env named file in root dir. And create env variables in it which can be used in process.env.
+- install dotenv package, to store environment variable: npm install dotenv. After that create .env named file in root dir. And create environment variables in it which can be used in process.env.
 - install and setup cors, to receive responses from same source in backend, follow following steps:
 npm install cors (to install cors pkg)
 NOW ADD FOLLOWING CODE IN YOUR index.js IN BACKEND REPO:
@@ -17,8 +17,11 @@ app.use(cors())
 - To install and setup eslint in your backend project:
 npm install eslint --save-dev
 npx eslint --init
+add following in package.json scripts object: "lint": "eslint ."
+create new file in project's root called .eslintignore and add "dist" so lint can ignore dist (i.e. frontend's build dir)
 - To run tests on your backend application, use supertest:
 npm install --save-dev supertest
+- For encrypting password: npm install bcrypt
 - For authentication and authorization purposes:
 npm install jsonwebtoken
 
@@ -37,9 +40,6 @@ require("express-async-errors")
 npm install mongoose-unique-validator
 
 
-To validate a file if it follows eslint rules: npx eslint index.js
-To auto-fix errors in files: npx eslint --fix index.js
-
 - To setup jest to test node applications:
 run: npm install --save-dev jest
 add key-value pair in backend repo's package.json's scripts: "test": "jest --verbose"
@@ -52,3 +52,7 @@ npm test (to run all test cases you've created)
 npm test -- -t 'write here the description of test cases you've written' (here in string you may pass test description of the test case you wanna run)
 npm test -- -t 'notes' (It will run all of the tests that contain notes in their test's string name)
 npm test -- filetorun.test.js (to run tests present in a certain test file, normally all test files are present in tests directory)
+
+
+To validate a file if it follows eslint rules: npx eslint index.js
+To auto-fix errors in files: npx eslint --fix index.js
